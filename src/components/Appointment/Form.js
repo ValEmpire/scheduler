@@ -7,14 +7,26 @@ const Form = (props) => {
 
   const [name, setName] = useState(student || "");
 
+  const [interviewerVal, setInterviewerVal] = useState(interviewer || null);
+
   const handleOnChange = (e) => {
     setName(e.target.value);
+  };
+
+  const reset = () => {
+    setName("");
+    setInterviewerVal(null);
+  };
+
+  const cancel = () => {
+    reset();
+    onCancel();
   };
 
   return (
     <main className="appointment__card appointment__card--create">
       <section className="appointment__card-left">
-        <form autoComplete="off">
+        <form autoComplete="off" onSubmit={(event) => event.preventDefault()}>
           <input
             className="appointment__create-input text--semi-bold"
             name="name"
@@ -24,11 +36,15 @@ const Form = (props) => {
             value={name}
           />
         </form>
-        <InterviewerList interviewers={interviewers} value={interviewer} />
+        <InterviewerList
+          interviewers={interviewers}
+          value={interviewerVal}
+          onChange={setInterviewerVal}
+        />
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
-          <Button danger onClick={onCancel}>
+          <Button danger onClick={cancel}>
             Cancel
           </Button>
           <Button confirm onClick={onSave}>
