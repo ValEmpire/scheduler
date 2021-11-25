@@ -1,6 +1,4 @@
 export function getAppointmentsForDay(state, day) {
-  //... returns an array of appointments for that day
-
   let res = [];
 
   if (state.days.length === 0) return res;
@@ -14,6 +12,20 @@ export function getAppointmentsForDay(state, day) {
   for (const key of findDayAppointments) {
     res.push(state.appointments[key]);
   }
+
+  return res;
+}
+
+export function getInterview(state, interview) {
+  let res = interview;
+
+  if (!interview) return null;
+
+  const interviewerId = interview.interviewer;
+
+  const interviewer = state.interviewers[interviewerId];
+
+  res.interviewer = interviewer;
 
   return res;
 }
