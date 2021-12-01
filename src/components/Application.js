@@ -7,6 +7,7 @@ import DayList from "./DayList";
 import {
   getAppointmentsForDay,
   getInterviewersForDay,
+  getInterview,
 } from "../helpers/selectors";
 
 export default function Application(props) {
@@ -45,6 +46,23 @@ export default function Application(props) {
     });
   }, []);
 
+  const bookInterview = (id, interview) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview },
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
+    setState({
+      ...state,
+      appointments,
+    });
+  };
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -64,16 +82,20 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {dailyAppointments.map(
-          (appointment, i) =>
+        {dailyAppointments.map((appointment, i) => {
+          return (
             appointment && (
               <Appointment
+                bookInterview={bookInterview}
                 key={`${i}${appointment.id}`}
-                {...appointment}
+                id={appointment.id}
+                time={appointment.time}
+                interview={getInterview(state, appointment.interview)}
                 interviewers={interviewers}
               />
             )
-        )}
+          );
+        })}
         <Appointment time="5pm" />
       </section>
     </main>
