@@ -36,12 +36,12 @@ export default function Application(props) {
   useEffect(() => {
     Promise.all([
       axios.get("/api/days"),
-      axios.get("/api/appointments"),
       axios.get("/api/interviewers"),
+      axios.get("/api/appointments"),
     ]).then((all) => {
       setDays(all[0].data);
-      setAppointments(all[1].data);
-      setInterviewers(all[2].data);
+      setInterviewers(all[1].data);
+      setAppointments(all[2].data);
     });
   }, []);
 
@@ -74,6 +74,7 @@ export default function Application(props) {
               />
             )
         )}
+        <Appointment time="5pm" />
       </section>
     </main>
   );
