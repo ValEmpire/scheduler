@@ -67,6 +67,12 @@ export default function Application(props) {
     });
   };
 
+  const deleteInterview = (id, cb) => {
+    axios.delete(`/api/appointments/${id}`).then((response) => {
+      cb();
+    });
+  };
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -91,6 +97,7 @@ export default function Application(props) {
             appointment && (
               <Appointment
                 bookInterview={bookInterview}
+                deleteInterview={deleteInterview}
                 key={`${i}${appointment.id}`}
                 id={appointment.id}
                 time={appointment.time}

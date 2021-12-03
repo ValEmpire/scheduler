@@ -2,7 +2,6 @@ import React from "react";
 
 const Show = (props) => {
   const { student, interviewer, onEdit, onDelete } = props;
-  console.log(interviewer);
 
   return (
     <main className="appointment__card appointment__card--show">
