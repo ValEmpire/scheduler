@@ -7,7 +7,9 @@ const Form = (props) => {
 
   const [name, setName] = useState(student || "");
 
-  const [interviewerVal, setInterviewerVal] = useState(interviewer || null);
+  const [interviewerVal, setInterviewerVal] = useState(
+    interviewer ? interviewer.id : null
+  );
 
   const handleOnChange = (e) => {
     setName(e.target.value);
