@@ -57,20 +57,30 @@ export default function Application(props) {
       [id]: appointment,
     };
 
-    axios.put(`/api/appointments/${id}`, { interview }).then((response) => {
-      setState({
-        ...state,
-        appointments,
-      });
+    axios
+      .put(`/api/appointments/${id}`, { interview })
+      .then((response) => {
+        setState({
+          ...state,
+          appointments,
+        });
 
-      cb();
-    });
+        cb();
+      })
+      .catch((error) => {
+        cb(error);
+      });
   };
 
   const deleteInterview = (id, cb) => {
-    axios.delete(`/api/appointments/${id}`).then((response) => {
-      cb();
-    });
+    axios
+      .delete(`/api/appointments/${id}`)
+      .then((response) => {
+        cb();
+      })
+      .catch((error) => {
+        cb(error);
+      });
   };
 
   return (
