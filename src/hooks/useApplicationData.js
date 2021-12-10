@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 
 import axios from "axios";
 
+import update from "immutability-helper";
+
 export default function useApplicationData(initial) {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
-    // you may put the line below, but will have to remove/comment hardcoded appointments variable
     appointments: {},
     interviewers: {},
   });
@@ -34,10 +35,35 @@ export default function useApplicationData(initial) {
 
   const setDay = (day) => setState({ ...state, day });
 
+  const dayIndex = state.days.findIndex((el) => el.name === state.day);
+
+  const newDay = (operation) => {
+    if (operation === "bookInterview") {
+      return {
+        ...state.days[dayIndex],
+        spots: state.days[dayIndex].spots - 1,
+      };
+    }
+
+    return {
+      ...state.days[dayIndex],
+      spots: state.days[dayIndex].spots + 1,
+    };
+  };
+
   const cancelInterview = (id, cb) => {
     axios
       .delete(`/api/appointments/${id}`)
       .then((response) => {
+        const newDays = update(state.days, {
+          $splice: [[dayIndex, 1, newDay("cancelInterview")]],
+        });
+
+        setState({
+          ...state,
+          days: newDays,
+        });
+
         cb();
       })
       .catch((error) => {
@@ -59,9 +85,14 @@ export default function useApplicationData(initial) {
     axios
       .put(`/api/appointments/${id}`, { interview })
       .then((response) => {
+        const newDays = update(state.days, {
+          $splice: [[dayIndex, 1, newDay("bookInterview")]],
+        });
+
         setState({
           ...state,
           appointments,
+          days: newDays,
         });
 
         cb();
