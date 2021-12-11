@@ -24,7 +24,7 @@ const Appointment = (props) => {
     props.interview ? SHOW : EMPTY
   );
 
-  function save(name, interviewer) {
+  function save(name, interviewer, isUpdate) {
     const interview = {
       student: name,
       interviewer,
@@ -32,11 +32,16 @@ const Appointment = (props) => {
 
     transition(SAVING);
 
-    props.bookInterview(props.id, interview, (err) => {
-      if (err) return transition(ERROR_SAVE, true);
+    props.bookInterview(
+      props.id,
+      interview,
+      (err) => {
+        if (err) return transition(ERROR_SAVE, true);
 
-      return transition(SHOW);
-    });
+        return transition(SHOW);
+      },
+      isUpdate
+    );
   }
 
   function onDelete() {
@@ -71,7 +76,7 @@ const Appointment = (props) => {
       )}
       {mode === EDIT && (
         <Form
-          onSave={save}
+          onSave={(name, interviewerVal) => save(name, interviewerVal, true)}
           interviewers={props.interviewers}
           {...props.interview}
           onCancel={back}

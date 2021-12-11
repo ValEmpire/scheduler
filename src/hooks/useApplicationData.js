@@ -45,11 +45,13 @@ export default function useApplicationData(initial) {
   // this will return the newDay with spots computation
   // add spot when user cancelInterview
   // subtract spot when user cookInterview
-  const newDay = (operation) => {
+  const newDay = (operation, isUpdate) => {
     if (operation === "bookInterview") {
       return {
         ...state.days[dayIndex],
-        spots: state.days[dayIndex].spots - 1,
+        spots: isUpdate
+          ? state.days[dayIndex].spots
+          : state.days[dayIndex].spots - 1,
       };
     }
 
@@ -83,7 +85,7 @@ export default function useApplicationData(initial) {
 
   // accepts the id of target date and time, interview object with name and interviewer,
   // and cb which will call after the return promise
-  const bookInterview = (id, interview, cb) => {
+  const bookInterview = (id, interview, cb, isUpdate) => {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview },
@@ -98,7 +100,7 @@ export default function useApplicationData(initial) {
       .put(`/api/appointments/${id}`, { interview })
       .then((response) => {
         const newDays = update(state.days, {
-          $splice: [[dayIndex, 1, newDay("bookInterview")]],
+          $splice: [[dayIndex, 1, newDay("bookInterview", isUpdate)]],
         });
 
         setState({
@@ -111,6 +113,7 @@ export default function useApplicationData(initial) {
       })
       .catch((error) => {
         // if error found cb with an error
+        console.log(error);
         cb(error);
       });
   };
