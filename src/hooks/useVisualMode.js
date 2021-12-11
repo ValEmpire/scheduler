@@ -4,6 +4,8 @@ export default function useVisualMode(initial) {
   const [mode, setMode] = useState(initial);
   const [history, setHistory] = useState([initial]); //array
 
+  // this will transition the ui
+  // this will determine wchich component will be render by which transition it on
   const transition = (newMode, replace = false) => {
     setMode((prevMode) => {
       setHistory((prevHistory) => {
@@ -16,6 +18,7 @@ export default function useVisualMode(initial) {
     });
   };
 
+  // back will return the previous mode
   const back = () => {
     if (mode === initial) return setMode(initial);
 

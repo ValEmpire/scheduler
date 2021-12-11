@@ -1,5 +1,4 @@
 import React from "react";
-
 import "./Application.scss";
 import Appointment from "./Appointment";
 import DayList from "./DayList";
@@ -9,6 +8,7 @@ import {
   getInterview,
 } from "../helpers/selectors";
 
+// import the hooks
 import useApplicationData from "hooks/useApplicationData";
 
 export default function Application(props) {
@@ -38,6 +38,8 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
+        {/* map  daily appointments and return Appointment component of each appointment*/}
+
         {dailyAppointments.map((appointment, i) => {
           return (
             appointment && (
@@ -53,6 +55,8 @@ export default function Application(props) {
             )
           );
         })}
+
+        {/* This will be the last of the appointment. No appointment will be accepted onwards of this time */}
         <Appointment time="5pm" />
       </section>
     </main>

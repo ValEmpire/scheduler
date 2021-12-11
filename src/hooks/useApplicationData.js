@@ -5,8 +5,9 @@ import axios from "axios";
 import update from "immutability-helper";
 
 export default function useApplicationData(initial) {
+  // initialized state
   const [state, setState] = useState({
-    day: "Monday",
+    day: "Monday", //defaul selected
     days: [],
     appointments: {},
     interviewers: {},
@@ -21,6 +22,7 @@ export default function useApplicationData(initial) {
     setState((prev) => ({ ...prev, interviewers }));
   };
 
+  // when component did mount
   useEffect(() => {
     Promise.all([
       axios.get("/api/days"),
@@ -33,10 +35,16 @@ export default function useApplicationData(initial) {
     });
   }, []);
 
+  // setDay when user click the sidebar days
+  // this will change the default day to which user click
   const setDay = (day) => setState({ ...state, day });
 
+  // find the index of selected day
   const dayIndex = state.days.findIndex((el) => el.name === state.day);
 
+  // this will return the newDay with spots computation
+  // add spot when user cancelInterview
+  // subtract spot when user cookInterview
   const newDay = (operation) => {
     if (operation === "bookInterview") {
       return {
@@ -51,6 +59,7 @@ export default function useApplicationData(initial) {
     };
   };
 
+  // accepts the id of target date and time, and cb which will call after the return promise
   const cancelInterview = (id, cb) => {
     axios
       .delete(`/api/appointments/${id}`)
@@ -67,10 +76,13 @@ export default function useApplicationData(initial) {
         cb();
       })
       .catch((error) => {
+        // if error found cb with an error
         cb(error);
       });
   };
 
+  // accepts the id of target date and time, interview object with name and interviewer,
+  // and cb which will call after the return promise
   const bookInterview = (id, interview, cb) => {
     const appointment = {
       ...state.appointments[id],
@@ -98,6 +110,7 @@ export default function useApplicationData(initial) {
         cb();
       })
       .catch((error) => {
+        // if error found cb with an error
         cb(error);
       });
   };
