@@ -23,11 +23,14 @@ const Form = (props) => {
   };
 
   const cancel = () => {
+    setError("");
     reset();
     onCancel();
   };
 
   const validate = () => {
+    setError("");
+
     if (name === "") {
       setError("Student name cannot be blank");
       return;
