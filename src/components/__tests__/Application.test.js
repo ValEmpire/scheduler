@@ -9,9 +9,12 @@ import {
   queryByText,
   getByText,
   getAllByTestId,
+  queryByAltText,
   getByAltText,
   getByPlaceholderText,
 } from "@testing-library/react";
+
+import axios from "axios";
 
 import Application from "components/Application";
 
@@ -27,12 +30,14 @@ describe("Application", () => {
       expect(getByText("Leopold Silvers")).toBeInTheDocument();
     });
   });
+
   it("loads data, books an interview and reduces the spots remaining for Monday by 1", async () => {
-    const { container, debug } = render(<Application />);
+    const { container } = render(<Application />);
 
     await waitForElement(() => getByText(container, "Archie Cohen"));
 
     const appointments = getAllByTestId(container, "appointment");
+
     const appointment = appointments[0];
 
     fireEvent.click(getByAltText(appointment, "Add"));
@@ -42,6 +47,7 @@ describe("Application", () => {
     });
 
     fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
+
     fireEvent.click(getByText(appointment, "Save"));
 
     expect(getByText(appointment, "Saving")).toBeInTheDocument();
@@ -53,5 +59,10 @@ describe("Application", () => {
     );
 
     expect(getByText(day, "no spots remaining")).toBeInTheDocument();
+  });
+
+  /* test number five */
+  it("shows the save error when failing to save an appointment", () => {
+    axios.put.mockRejectedValueOnce();
   });
 });
