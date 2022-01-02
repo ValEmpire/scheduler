@@ -19,6 +19,7 @@ const Appointment = (props) => {
   const EDIT = "EDIT";
   const ERROR_SAVE = "ERROR_SAVE";
   const ERROR_DELETE = "ERROR_DELETE";
+  const ERROR_NO_INTERVIEWER = "ERROR_NO_INTERVIEWER";
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
@@ -42,6 +43,10 @@ const Appointment = (props) => {
       },
       isUpdate
     );
+  }
+
+  function onSaveError() {
+    transition(ERROR_NO_INTERVIEWER);
   }
 
   function onDelete() {
@@ -76,6 +81,7 @@ const Appointment = (props) => {
       )}
       {mode === EDIT && (
         <Form
+          onSaveError={onSaveError}
           onSave={(name, interviewerVal) => save(name, interviewerVal, true)}
           interviewers={props.interviewers}
           {...props.interview}
@@ -83,7 +89,12 @@ const Appointment = (props) => {
         />
       )}
       {mode === CREATE && (
-        <Form onSave={save} interviewers={props.interviewers} onCancel={back} />
+        <Form
+          onSave={save}
+          onSaveError={onSaveError}
+          interviewers={props.interviewers}
+          onCancel={back}
+        />
       )}
       {mode === SAVING && <Status message={SAVING} />}
       {mode === DELETING && <Status message={DELETING} />}
@@ -92,6 +103,12 @@ const Appointment = (props) => {
           message={"Are you sure you would like to delete?"}
           onConfirm={confirmDelete}
           onCancel={back}
+        />
+      )}
+      {mode === ERROR_NO_INTERVIEWER && (
+        <Error
+          message={"Could not create an appointment without interviewer."}
+          onClose={back}
         />
       )}
       {mode === ERROR_SAVE && (

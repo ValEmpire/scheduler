@@ -13,9 +13,18 @@ export function getAppointmentsForDay(state, day) {
 
   const findDayAppointments = findDay.appointments;
 
+  // console.log(state.appointments);
+
+  // console.log(findDayAppointments[1]);
+
   // loop all the found appointments as array
   for (const key of findDayAppointments) {
+    // console.log(state.appointments[key]);
     res.push(state.appointments[key]);
+  }
+
+  if (Object.keys(state.appointments).length > 0) {
+    // console.log(state.appointments[1].interview.interviewer);
   }
 
   return res;
@@ -27,7 +36,9 @@ export function getInterview(state, interview) {
 
   if (!interview) return null;
 
-  const interviewerId = interview.interviewer;
+  const interviewerId = interview.interviewer.id
+    ? interview.interviewer.id
+    : interview.interviewer;
 
   // get the interviewerId key from state.interviewers
   const interviewer = state.interviewers[interviewerId];

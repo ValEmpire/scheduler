@@ -3,7 +3,8 @@ import Button from "components/Button";
 import InterviewerList from "components/InterviewerList";
 
 const Form = (props) => {
-  const { student, interviewer, interviewers, onSave, onCancel } = props;
+  const { student, interviewer, interviewers, onSave, onCancel, onSaveError } =
+    props;
 
   const [name, setName] = useState(student || "");
 
@@ -33,6 +34,11 @@ const Form = (props) => {
 
     if (name === "") {
       setError("Student name cannot be blank");
+      return;
+    }
+
+    if (!interviewerVal) {
+      onSaveError();
       return;
     }
 
